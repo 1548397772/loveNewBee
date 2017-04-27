@@ -18,21 +18,35 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    [self addMainTabBarController];
-    [AJNotification addObserver:self selector:@selector(IncreaseShoppingCart) name:LFBShopCarBuyNumberDidChangeNotification object:nil];
-}
-- (void)addMainTabBarController
-{
-    [self setupChildViewController:@"首页" viewController:[AJHomeViewController new] image:@"v2_home" selectedImage:@"v2_home_r"];
-    [self setupChildViewController:@"闪电超市" viewController:[AJFlashViewController new] image:@"v2_order" selectedImage:@"v2_order_r"];
-    [self setupChildViewController:@"购物车" viewController:[AJShoppingVC new] image:@"shopCart" selectedImage:@"shopCart_r"];
-    [self setupChildViewController:@"我的" viewController:[AJMyViewController new] image:@"v2_my" selectedImage:@"v2_my_r"];
     
+    /*********************************/
+    AJHomeViewController *home = [[AJHomeViewController alloc]init];
+    home.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"首页" image:[[UIImage imageNamed:@"v2_home"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] selectedImage:[[UIImage imageNamed:@"v2_home_r"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    AJBaseNavigationController *homeNav = [[AJBaseNavigationController alloc]initWithRootViewController:home];
+    
+    AJFlashViewController *shop = [[AJFlashViewController alloc]init];
+    shop.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"闪电超市" image:[UIImage imageNamed:@"shopCart"] selectedImage:[[UIImage imageNamed:@"v2_order_r"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    AJBaseNavigationController *shopNav = [[AJBaseNavigationController alloc]initWithRootViewController:shop];
+    
+    AJShoppingVC *shopCart = [[AJShoppingVC alloc]init];
+    shopCart.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"购物车" image:[UIImage imageNamed:@"shopCart"] selectedImage:[[UIImage imageNamed:@"shopCart_r"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    AJBaseNavigationController *shopCartNav = [[AJBaseNavigationController alloc]initWithRootViewController:shopCart];
+    
+    AJMyViewController *my = [[AJMyViewController alloc]init];
+    my.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"我的" image:[UIImage imageNamed:@"v2_my"] selectedImage:[[UIImage imageNamed:@"v2_my_r"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]];
+    AJBaseNavigationController *myNav = [[AJBaseNavigationController alloc]initWithRootViewController:my];
+    
+    self.viewControllers = @[homeNav,shopNav,shopCartNav,myNav];
+    /*********************************/
+    
+    [AJNotification addObserver:self selector:@selector(IncreaseShoppingCart) name:LFBShopCarBuyNumberDidChangeNotification object:nil];
 }
 
 - (void)IncreaseShoppingCart{
+    
+    NSInteger shoppingIndex = [[AJUserShopCarTool sharedInstance] getShopCarGoodsNumber];
     UIViewController *shoppingVC = self.childViewControllers[2];
-    NSInteger shoppingIndex = [[AJUserShopCarTool sharedInstance]getShopCarGoodsNumber];
+
     if (shoppingIndex == 0) {
         shoppingVC.tabBarItem.badgeValue = nil;
         return;
@@ -43,15 +57,5 @@
     [AJNotification removeObserver:self];
 }
 
-- (void)setupChildViewController:(NSString *)title viewController:(UIViewController *)controller image:(NSString *)image selectedImage:(NSString *)selectedImage {
-    UITabBarItem *item = [[UITabBarItem alloc]init];
-    item.image = [UIImage imageNamed:image];
-    item.selectedImage = [UIImage imageNamed:selectedImage];
-    item.title = title;
-    controller.tabBarItem = item;
-    controller.title = title;
-    AJBaseNavigationController *naController = [[AJBaseNavigationController alloc]initWithRootViewController:controller];
-    [self addChildViewController:naController];
-}
 
 @end

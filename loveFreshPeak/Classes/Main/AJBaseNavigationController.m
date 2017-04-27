@@ -17,7 +17,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.backBtn = ({
+    
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         [btn setImage:[UIImage imageNamed:@"v2_goback"] forState:UIControlStateNormal];
         btn.titleLabel.hidden = YES;
@@ -25,8 +25,7 @@
         btn.contentHorizontalAlignment  = UIControlContentHorizontalAlignmentLeft;
         btn.contentEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
         btn.frame = CGRectMake(0, 0, 44, 40);
-        btn;
-    });
+    self.backBtn = btn;
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated

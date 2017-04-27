@@ -17,10 +17,48 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [self setAppStyle];
-    [self buildKeyWindow];
+    UITabBar *tabBarAppearance = [UITabBar appearance];
+    tabBarAppearance.tintColor = [UIColor orangeColor]; //设置tabbar字体的颜色
+    
+    UINavigationBar *navigationBarAppearence = [UINavigationBar appearance];
+    navigationBarAppearence.translucent = NO; //设置不透明
+    
+    self.window = [[UIWindow alloc]init];
+    [self.window makeKeyAndVisible];
+    NSString *isFirstInstall = [[NSUserDefaults standardUserDefaults] objectForKey:IsFirstOpenApp];
+    if (isFirstInstall == nil || [isFirstInstall isEqualToString:@""]) {
+        //跳入新特性
+        self.window.rootViewController = [[AJMainTabBarController alloc]init];
+        [[NSUserDefaults standardUserDefaults] setValue:IsFirstOpenApp forKey:IsFirstOpenApp];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    else
+    {
+        self.window.rootViewController = [[AJMainTabBarController alloc]init];
+    }
     return YES;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - (void)buildKeyWindow{
     self.window = [[UIWindow alloc]init];

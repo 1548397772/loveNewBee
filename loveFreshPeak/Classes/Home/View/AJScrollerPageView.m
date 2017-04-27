@@ -30,17 +30,15 @@ static const NSInteger MaxImageViewCount = 3;
 - (instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        self.scrollView = ({
             UIScrollView *scroll = [[UIScrollView alloc]init];
             scroll.showsHorizontalScrollIndicator = NO;
             scroll.showsVerticalScrollIndicator = NO;
             scroll.pagingEnabled = YES;
             scroll.bounces = NO;
             scroll.delegate = self;
-            scroll;
-        });
+            self.scrollView = scroll;
         [self addSubview:self.scrollView];
-        NSLog(@"self.images.count  - %zd",self.images.count);
+
         for (int i = 0; i <  MaxImageViewCount; ++i) {
             UIImageView *imageView = [[UIImageView alloc]init];
             imageView.userInteractionEnabled = YES;
@@ -48,7 +46,6 @@ static const NSInteger MaxImageViewCount = 3;
             [imageView addGestureRecognizer:tapGes];
             [self.scrollView addSubview:imageView];
         }
-        NSLog(@"self.subvies = %@",self.scrollView.subviews);
         
         self.pageControl = [[UIPageControl alloc]init];
         self.pageControl.currentPageIndicatorTintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"v2_home_cycle_dot_selected"]];
@@ -70,10 +67,10 @@ static const NSInteger MaxImageViewCount = 3;
 - (void)layoutSubviews{
     [super layoutSubviews];
     self.scrollView.frame = self.bounds;
-    CGFloat scrollViewW = self.scrollView.frame.size.width;
-    CGFloat scrollViewH = self.scrollView.frame.size.height;
+    CGFloat scrollViewW = self.frame.size.width;
+    CGFloat scrollViewH = self.frame.size.height;
     self.scrollView.contentSize = CGSizeMake(scrollViewW * MaxImageViewCount, 0);
-    for (int i = 0; i < self.scrollView.subviews.count; ++i) {
+    for (int i = 0; i < MaxImageViewCount ; ++i) {
         UIImageView *images = self.scrollView.subviews[i];
         images.frame = CGRectMake(scrollViewW * i, 0, scrollViewW, scrollViewH);
     }
@@ -81,12 +78,12 @@ static const NSInteger MaxImageViewCount = 3;
     [self updatePageScrollerView];
 }
 - (void)updatePageScrollerView{
-    for (int i = 0; i < self.scrollView.subviews.count; ++i) {
+    for (int i = 0; i < MaxImageViewCount; ++i) {
         UIImageView *imageView = self.scrollView.subviews[i];
         NSInteger index = self.pageControl.currentPage;
         if (i==0) {
             index --;
-        }else if(i == 2){
+        }else if(i == MaxImageViewCount-1 ){
             index ++;
         }
         
@@ -98,7 +95,7 @@ static const NSInteger MaxImageViewCount = 3;
         imageView.tag = index;
         [imageView sd_setImageWithURL:[NSURL URLWithString:self.images[index]] placeholderImage:self.placeImage];
     }
-    self.scrollView.contentOffset = CGPointMake(self.scrollView.frame.size.width, 0);
+    [self.scrollView setContentOffset:CGPointMake(self.scrollView.frame.size.width, 0)];
 }
 
 #pragma mark - UIScrollViewDelegate
