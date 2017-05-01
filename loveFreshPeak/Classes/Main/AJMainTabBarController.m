@@ -19,6 +19,13 @@
 - (void)viewDidLoad{
     [super viewDidLoad];
     [self addMainTabBarController];
+    
+    
+//    self.tabBar.tintColor = [UIColor orangeColor]; //这个就可以设置选中状态是的颜色
+   
+    UITabBarItem *appeanrence = [UITabBarItem appearance];
+    [appeanrence setTitleTextAttributes:@{NSForegroundColorAttributeName :[UIColor orangeColor]} forState:UIControlStateSelected];         //这个就可以设置选中状态是的颜色
+    
     [AJNotification addObserver:self selector:@selector(IncreaseShoppingCart) name:LFBShopCarBuyNumberDidChangeNotification object:nil];
 }
 - (void)addMainTabBarController

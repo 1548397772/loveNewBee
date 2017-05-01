@@ -13,6 +13,7 @@
 @property (nonatomic, strong) UIScrollView *headlineScrollView;
 @property (nonatomic, assign) NSInteger currentPage;
 @property (nonatomic, strong) NSTimer *timer;
+@property(nonatomic,assign)BOOL isFirst;
 @end
 @implementation AJHeadLinePageView
 /* 最大重用view的个数 */
@@ -20,6 +21,7 @@ static const CGFloat MaxContentViewCount = 3;
 
 - (instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
+        _isFirst = YES;
         _headlineScrollView = [[UIScrollView alloc]init];
         _headlineScrollView.pagingEnabled = YES;
         _headlineScrollView.bounces = NO;
@@ -85,9 +87,9 @@ static const CGFloat MaxContentViewCount = 3;
         }
     }
 }
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    [self updateHeadlinePageView];
-}
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+//    [self updateHeadlinePageView];
+//}
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
     [self updateHeadlinePageView];
 }
@@ -105,7 +107,12 @@ static const CGFloat MaxContentViewCount = 3;
 
 - (void)next{
     CGFloat scrollViewH = self.headlineScrollView.frame.size.height;
-    
+    if (_isFirst) {
+        _isFirst = NO;
+        [self.headlineScrollView setContentOffset:CGPointMake(0, scrollViewH) animated:YES];
+        return;
+    }
+        
     [self.headlineScrollView setContentOffset:CGPointMake(0, 2 * scrollViewH) animated:YES];
 }
 
